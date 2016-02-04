@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title></title>
+	<meta name="generator" content="TextMate http://macromates.com/">
+	<meta name="author" content="Stephan Müller">
+	<script type="text/javascript" src="workerQueue.js" charset="utf-8"></script>
+	<script type="text/javascript" charset="utf-8">
+		var wq = null;
+		var lastID = 0;
+		function init() {
+			wq = new workerQueue();
+			// spawn two worker threads
+			wq.maxWorkers = 2;
+		}
+		function move(canvas) {
+			var ctx = canvas.getContext("2d");
+			var x = window.event.layerX;
+			var y = window.event.layerY;
+			
+			var job = function (args) {
+				// do some work
+				var step = 1 + 5*Math.random();
+				for (var i=0; i < 100000000; i+= step) {
+					//step = 8*Math.random();
+				};
+				return args;
+			}
+			var callback = function(results, job) {
+				// enforce sequence
+				if (job.id<=lastID) return;
+				lastID = job.id;
+				// throttling
+				var dt = new Date().getTime() - job.start;
+				var delay = dt / wq.maxWorkers;
+				console.log(delay);
+				if (wq.delay==0) {
+					wq.delay = delay;
+				} else {
+					wq.delay = 0.2*delay + 0.8*wq.delay;
+			 	}
+				// update canvas
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				ctx.fillRect(x-5, y-5, 10, 10);
+			}
+			// remove pending jobs
+			wq.queue.splice(0,wq.queue.length);
+			wq.add(job, [x, y], callback);
+		}
+	</script>
+	<style type="text/css" media="screen">
+		#canvas {
+			background-color: silver;
+		}
+	</style>
+</head>
+<body onload="init()">
+
+<canvas id="canvas" width="400" height="400" onmousemove="move(this)"></canvas>
+
+</body>
+</html>
