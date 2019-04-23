@@ -4,7 +4,7 @@ A queue based web worker API to simplify multithreading in JavaScript.
 
 This repository was created for my [blog post](http://heap.ch/blog/2016/02/04/workerQueue/) which contains additional information.
 
-The code was used for [Map Miner](http://heapcraft.net/?p=mapminer), an interactive data visualizer to explore player positions within a minecraft world. There is also an [interactive demo](http://heapcraft.net/mapminerdemo/).
+The code was used for [Map Miner](https://github.com/stepmuel/mapminer), an interactive data visualizer to explore player positions within a minecraft world. There is also an [interactive demo](http://heapcraft.net/mapminer/).
 
 ## Usage
 
